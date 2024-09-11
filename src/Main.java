@@ -5,6 +5,9 @@
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Scanner;
 
 class Person {
     String name;
@@ -248,28 +251,526 @@ class University {
     public void addStudent(String name,int group,double grad) {
         students.add(new Student(name, group, grad));
     }
-    public void NameList() {
-        ArrayList<Student> std = new ArrayList<Student>();
-        for (Student student : students.stream()) {
-            System.out.println(student.name);
-        }
+
+    public void sortByName() {
+        Collections.sort(students, Comparator.comparing(student -> student.name));
         for (Student student : students) {
             System.out.println(student.name);
         }
     }
 
+    public void filterByGrade(double minGrade) {
+        for (Student student : students) {
+            if (student.grade >= minGrade) {
+                System.out.println(student.name);;
+            }
+        }
+    }
+
+}
+
+// Задача 11 Класс "Магазин"
+// Реализуйте класс Product с полями name, price, и quantity.
+// Создайте класс Store, который содержит список продуктов и методы для добавления,
+// удаления и поиска товаров по имени.
+
+class Product {
+    String name;
+    int price;
+    int quantity;
+    public Product(String name, int price, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
+    }
+}
+
+class Store {
+    ArrayList<Product> products = new ArrayList<Product>();
+
+    public void addProduct(String name, int price, int quantity){
+        products.add(new Product(name, price, quantity));
+    }
+
+    public void deleteProduct(String name) {
+        products.removeIf(product -> product.name.equals(name));
+    }
+}
+
+// Задача 12 Интерфейс "Платежная система"
+// Создайте интерфейс PaymentSystem с методами pay() и refund().
+// Реализуйте классы CreditCard и PayPal, которые реализуют этот интерфейс.
+
+interface PaymentSystem {
+    public void pay(int money);
+    public void refund(int money);
+}
+
+class CreditCard implements PaymentSystem {
+    int money;
+    public void pay(int money) {
+        this.money -= money;
+    }
+
+    public void refund(int money) {
+        this.money += money;
+    }
+}
+
+class PayPal implements PaymentSystem{
+    int money;
+    public void pay(int money) {
+        this.money -= money;
+    }
+    public void refund(int money) {
+        this.money += money;
+    }
+}
+
+// Задача 13 Генерация уникальных идентификаторов
+// Создайте класс UniqueID, который генерирует уникальные идентификаторы для объектов каждого
+// созданного класса. Реализуйте этот функционал через статическое поле и метод.
+
+class UniqueID {
+    int id;
+    static ArrayList<Integer> ids = new ArrayList<Integer>();
+    public UniqueID() {
+        this.id = CreateID();
+        ids.add(id);
+    }
+    private static int CreateID() {
+        if (ids.isEmpty()) {
+            return 1;
+        }
+        else {
+            return ids.getLast() + 1;
+        }
+    }
+}
+
+// Задача 14 Класс "Точка" и "Прямоугольник"
+// Создайте класс Point с координатами x и y. Реализуйте класс Rectangle,
+// который содержит две точки (левая верхняя и правая нижняя).
+// Реализуйте метод для вычисления площади прямоугольника.
+
+class  Point {
+    int x;
+    int y;
+    public Point(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+}
+
+class Rectangle1 {
+    public int square(Point one, Point two) {
+        return (one.x - two.x) * (one.y - one.x);
+    }
+}
+
+// Задача 15 Комплексные числа
+// Создайте класс ComplexNumber с полями для действительной и мнимой частей.
+// Реализуйте методы для сложения, вычитания, умножения и деления комплексных чисел.
+
+class ComplexNumber {
+    private double real;  // Действительная часть
+    private double imaginary;  // Мнимая часть
+
+    public ComplexNumber(double real, double imaginary) {
+        this.real = real;
+        this.imaginary = imaginary;
+    }
+
+    public ComplexNumber add(ComplexNumber other) {
+        double newReal = this.real + other.real;
+        double newImaginary = this.imaginary + other.imaginary;
+        return new ComplexNumber(newReal, newImaginary);
+    }
+
+    public ComplexNumber subtract(ComplexNumber other) {
+        double newReal = this.real - other.real;
+        double newImaginary = this.imaginary - other.imaginary;
+        return new ComplexNumber(newReal, newImaginary);
+    }
+
+    public ComplexNumber multiply(ComplexNumber other) {
+        double newReal = (this.real * other.real) - (this.imaginary * other.imaginary);
+        double newImaginary = (this.real * other.imaginary) + (this.imaginary * other.real);
+        return new ComplexNumber(newReal, newImaginary);
+    }
+
+    public ComplexNumber divide(ComplexNumber other) {
+        double newReal = (this.real * other.real + this.imaginary * other.imaginary) / other.real * other.real + other.imaginary * other.imaginary;
+        double newImaginary = (this.imaginary * other.real - this.real * other.imaginary) / other.real * other.real + other.imaginary * other.imaginary;
+        return new ComplexNumber(newReal, newImaginary);
+    }
+}
+
+// Задача 16 Перегрузка операторов: Матрица
+// Создайте класс Matrix, представляющий двумерную матрицу.
+// Реализуйте методы для сложения и умножения матриц.
+// Продемонстрируйте перегрузку методов.
+
+class Matrix {
+    int[][] matrix;
+    int column;
+    int row;
+
+    public Matrix(int rows, int cols) {
+        this.row = rows;
+        this.column = cols;
+        this.matrix = new int[rows][cols];
+    }
+
+    public Matrix(int[][] matrix) {
+        this.row = matrix.length;
+        this.column = matrix[0].length;
+        this.matrix = new int[row][column];
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++)
+            {
+                this.matrix[i][j] = matrix[i][j];
+            }
+        }
+    }
+
+    public Matrix add(Matrix other) {
+        if (this.row != other.row || this.column != other.column) {
+            return null;
+        }
+        Matrix result = new Matrix(this.row, this.column);
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                result.matrix[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    public Matrix multiply(Matrix other) {
+        if (this.column != other.row) {
+            return null;
+        }
+
+        Matrix result = new Matrix(this.row, other.column);
+
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < other.column; j++) {
+                int sum = 0;
+                for (int k = 0; k < this.column; k++) {
+                    sum += this.matrix[i][k] * other.matrix[k][j];
+                }
+                result.matrix[i][j] = sum;
+            }
+        }
+
+        return result;
+    }
+}
+
+// Задача 17 Создание игры с использованием ООП
+// Реализуйте классы для небольшой текстовой игры, такие как Player, Enemy, Weapon,
+// с полями и методами, описывающими их поведение.
+
+class Player {
+    int healt;
+    int damage;
+    Weapon weapon;
+    public Player(int healt, int damage, Weapon weapon) {
+        this.healt = healt;
+        this.damage = damage;
+        this.weapon = weapon;
+    }
+    public void Fight(Enemy enemy) {
+        int alldmg = this.damage + this.weapon.damage;
+        enemy.healt -= alldmg;
+        if (enemy.healt <= 0)
+        {
+            System.out.println("Игрок выйграл");
+        }
+        else {
+            System.out.println("Игрок нанес " + alldmg + " урона и оставил врагу " + enemy.healt + " здоровья");
+            enemy.Fight(this);
+        }
+    }
+}
+
+class Enemy {
+    int healt;
+    int damage;
+    Weapon weapon;
+    public Enemy(int healt, int damage, Weapon weapon) {
+        this.healt = healt;
+        this.damage = damage;
+        this.weapon = weapon;
+    }
+    public void Fight(Player enemy) {
+        int alldmg = this.damage + this.weapon.damage;
+        enemy.healt -= alldmg;
+        if (enemy.healt <= 0)
+        {
+            System.out.println("Враг выйграл");
+        }
+        else {
+            System.out.println("Враг нанес " + alldmg + " урона и оставил игроку " + enemy.healt + " здоровья");
+            enemy.Fight(this);
+        }
+    }
+}
+
+class Weapon {
+    String name;
+    int damage;
+    public Weapon(String name, int damage) {
+        this.name = name;
+        this.damage = damage;
+    }
+}
+
+// Задача 18 Автоматизированная система заказов
+// Создайте классы Order, Customer, и Product.
+// Реализуйте систему, где можно добавлять заказы, отображать общую стоимость
+// заказа и просматривать историю заказов.
+
+class Product1 {
+    String name;
+    int cost;
+    public Product1(String name, int cost) {
+        this.cost = cost;
+        this.name = name;
+    }
+}
+class Order {
+    int orderNum;
+    int sumCost;
+    ArrayList<Product1> products = new ArrayList<Product1>();
+    public Order(int orderNum, int sumCost, ArrayList<Product1> products) {
+        this.orderNum = orderNum;
+        this.products = products;
+        for (Product1 product : products)
+        {
+            this.sumCost += product.cost;
+        }
+    }
+    public void getCost(){
+        System.out.println(this.sumCost);
+    }
+}
+
+class Customers {
+    String name;
+    ArrayList<Order> orders = new ArrayList<Order>();
+    public void CreateOrder(int orderNum, ArrayList<Product1> products){
+        int sumCost = 0;
+        for (Product1 product : products)
+        {
+            sumCost += product.cost;
+        }
+        Order newOrder = new Order(orderNum,sumCost,products);
+        orders.add(newOrder);
+    }
+    public void history(){
+        for (Order order : orders){
+            System.out.println(order.orderNum);
+        }
+    }
+}
+
+// Задача 19 Наследование: Электроника
+// Создайте класс Device с полем brand и методами turnOn() и turnOff().
+// Реализуйте классы Smartphone и Laptop, которые наследуют от Device и добавляют уникальные методы,
+// например, takePhoto() для смартфона.
+
+class Device {
+    String brand;
+    public void turnOn() {
+        System.out.println("Я РОДИЛСЯ");
+    }
+    public void turnOff() {
+        System.out.println("Спокойной ночи");
+    }
+}
+
+class Smartphone extends Device {
+    public void takePhoto() {
+        System.out.println("Фотографирую закат");
+    }
+}
+
+class Laptop extends Device {
+    public void Disk() {
+        System.out.println("ДИСКОВОООООООООООООД");
+    }
+}
+
+// Задача 20 Игра "Крестики-нолики"
+// Разработайте классы для игры "Крестики-нолики".
+// Создайте класс Game, который управляет логикой игры, и классы Player,
+// описывающие поведение игроков.
+
+class Player1 {
+    private String name;
+    private char symbol; // Символ игрока (X или O)
+
+    // Конструктор
+    public Player1(String name, char symbol) {
+        this.name = name;
+        this.symbol = symbol;
+    }
+
+    // Получить имя игрока
+    public String getName() {
+        return name;
+    }
+
+    // Получить символ игрока
+    public char getSymbol() {
+        return symbol;
+    }
+
+    // Сделать ход
+    public int[] makeMove() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(name + " (" + symbol + "), введите координаты вашего хода (строка и столбец): ");
+        int row = scanner.nextInt();
+        int col = scanner.nextInt();
+        return new int[]{row, col};
+    }
+}
+
+class Game {
+    private char[][] board; // Игровая доска
+    private Player1 player1;
+    private Player1 player2;
+    private Player1 currentPlayer;
+
+    public Game(Player1 player1, Player1 player2) {
+        this.player1 = player1;
+        this.player2 = player2;
+        this.currentPlayer = player1;
+        this.board = new char[3][3]; // Создаем пустую доску 3x3
+        initializeBoard();
+    }
+
+    private void initializeBoard() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board[i][j] = '-';
+            }
+        }
+    }
+
+    public void printBoard() {
+        System.out.println("Текущая доска:");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    private boolean isValidMove(int row, int col) {
+        return row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == '-';
+    }
+
+    public boolean makeMove(int row, int col) {
+        if (isValidMove(row, col)) {
+            board[row][col] = currentPlayer.getSymbol();
+            return true;
+        } else {
+            System.out.println("Неверный ход! Попробуйте снова.");
+            return false;
+        }
+    }
+
+    // Проверка на победителя
+    public boolean checkWin() {
+        char symbol = currentPlayer.getSymbol();
+
+        // Проверка строк
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] == symbol && board[i][1] == symbol && board[i][2] == symbol) {
+                return true;
+            }
+        }
+
+        // Проверка столбцов
+        for (int i = 0; i < 3; i++) {
+            if (board[0][i] == symbol && board[1][i] == symbol && board[2][i] == symbol) {
+                return true;
+            }
+        }
+
+        // Проверка диагоналей
+        if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) {
+            return true;
+        }
+        if (board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // Проверка на ничью
+    public boolean checkDraw() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == '-') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Смена игрока
+    private void switchPlayer() {
+        currentPlayer = (currentPlayer == player1) ? player2 : player1;
+    }
+
+    // Запуск игры
+    public void start() {
+        while (true) {
+            printBoard();
+            int[] move;
+            boolean validMove;
+
+            // Пока ход некорректен, продолжаем запрашивать ввод
+            do {
+                move = currentPlayer.makeMove();
+                validMove = makeMove(move[0], move[1]);
+            } while (!validMove);
+
+            // Проверка на победу
+            if (checkWin()) {
+                printBoard();
+                System.out.println("Поздравляем, " + currentPlayer.getName() + " (" + currentPlayer.getSymbol() + ") выиграл!");
+                break;
+            }
+
+            // Проверка на ничью
+            if (checkDraw()) {
+                printBoard();
+                System.out.println("Ничья!");
+                break;
+            }
+
+            // Смена игрока
+            switchPlayer();
+        }
+    }
 }
 
 public class Main {
     public static void main(String[] args) {
-        University un = new University();
-        un.addStudent("Алыа", 121, 2.5);
-        un.addStudent("Блыа", 121, 2.5);
-        un.addStudent("Елыа", 121, 2.5);
-        un.addStudent("Влыа", 121, 2.5);
-        un.addStudent("Ёлыа", 121, 2.5);
-        un.addStudent("Нлыа", 121, 2.5);
-        un.NameList();
-
+        /*Weapon axe = new Weapon("axe",7);
+        Weapon bow = new Weapon("bow",3);
+        Weapon knife = new Weapon("knife",5);
+        Player player = new Player(100,3,axe);
+        Enemy enemy = new Enemy(100,9,bow);
+        player.Fight(enemy);*/
     }
 }
