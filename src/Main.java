@@ -400,8 +400,8 @@ class ComplexNumber {
     }
 
     public ComplexNumber divide(ComplexNumber other) {
-        double newReal = (this.real * other.real + this.imaginary * other.imaginary) / other.real * other.real + other.imaginary * other.imaginary;
-        double newImaginary = (this.imaginary * other.real - this.real * other.imaginary) / other.real * other.real + other.imaginary * other.imaginary;
+        double newReal = (this.real * other.real + this.imaginary * other.imaginary) / (other.real * other.real + other.imaginary * other.imaginary);
+        double newImaginary = (this.imaginary * other.real - this.real * other.imaginary) / (other.real * other.real + other.imaginary * other.imaginary);
         return new ComplexNumber(newReal, newImaginary);
     }
 }
@@ -416,10 +416,10 @@ class Matrix {
     int column;
     int row;
 
-    public Matrix(int rows, int cols) {
-        this.row = rows;
-        this.column = cols;
-        this.matrix = new int[rows][cols];
+    public Matrix(int row, int column) {
+        this.row = row;
+        this.column = column;
+        this.matrix = new int[row][column];
     }
 
     public Matrix(int[][] matrix) {
@@ -613,23 +613,19 @@ class Player1 {
     private String name;
     private char symbol; // Символ игрока (X или O)
 
-    // Конструктор
     public Player1(String name, char symbol) {
         this.name = name;
         this.symbol = symbol;
     }
 
-    // Получить имя игрока
     public String getName() {
         return name;
     }
 
-    // Получить символ игрока
     public char getSymbol() {
         return symbol;
     }
 
-    // Сделать ход
     public int[] makeMove() {
         Scanner scanner = new Scanner(System.in);
         System.out.println(name + " (" + symbol + "), введите координаты вашего хода (строка и столбец): ");
@@ -640,7 +636,7 @@ class Player1 {
 }
 
 class Game {
-    private char[][] board; // Игровая доска
+    private char[][] board;
     private Player1 player1;
     private Player1 player2;
     private Player1 currentPlayer;
@@ -649,7 +645,7 @@ class Game {
         this.player1 = player1;
         this.player2 = player2;
         this.currentPlayer = player1;
-        this.board = new char[3][3]; // Создаем пустую доску 3x3
+        this.board = new char[3][3];
         initializeBoard();
     }
 
@@ -685,25 +681,21 @@ class Game {
         }
     }
 
-    // Проверка на победителя
     public boolean checkWin() {
         char symbol = currentPlayer.getSymbol();
 
-        // Проверка строк
         for (int i = 0; i < 3; i++) {
             if (board[i][0] == symbol && board[i][1] == symbol && board[i][2] == symbol) {
                 return true;
             }
         }
 
-        // Проверка столбцов
         for (int i = 0; i < 3; i++) {
             if (board[0][i] == symbol && board[1][i] == symbol && board[2][i] == symbol) {
                 return true;
             }
         }
 
-        // Проверка диагоналей
         if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) {
             return true;
         }
@@ -714,7 +706,6 @@ class Game {
         return false;
     }
 
-    // Проверка на ничью
     public boolean checkDraw() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -726,39 +717,32 @@ class Game {
         return true;
     }
 
-    // Смена игрока
     private void switchPlayer() {
         currentPlayer = (currentPlayer == player1) ? player2 : player1;
     }
 
-    // Запуск игры
     public void start() {
         while (true) {
             printBoard();
             int[] move;
             boolean validMove;
-
-            // Пока ход некорректен, продолжаем запрашивать ввод
             do {
                 move = currentPlayer.makeMove();
                 validMove = makeMove(move[0], move[1]);
             } while (!validMove);
 
-            // Проверка на победу
             if (checkWin()) {
                 printBoard();
                 System.out.println("Поздравляем, " + currentPlayer.getName() + " (" + currentPlayer.getSymbol() + ") выиграл!");
                 break;
             }
 
-            // Проверка на ничью
             if (checkDraw()) {
                 printBoard();
                 System.out.println("Ничья!");
                 break;
             }
 
-            // Смена игрока
             switchPlayer();
         }
     }
